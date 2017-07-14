@@ -36,10 +36,11 @@ var (
 
 	// outFlag   = app.Flag("out", "Output to file.").Short('o').Bool()
 	cfgFlag   = app.Flag("config", "Path to config file.").Short('c').String()
-	debugFlag = app.Flag("debug", "Enable debug mode.").Action(func(c *kingpin.ParseContext) error {
-		logrus.SetLevel(logrus.DebugLevel)
-		return nil
-	}).Bool()
+	debugFlag = app.Flag("debug", "Enable debug mode.").
+			Action(func(c *kingpin.ParseContext) error {
+			logrus.SetLevel(logrus.DebugLevel)
+			return nil
+		}).Bool()
 	reportFlag = app.Flag("report", "Report violations").Bool()
 
 	// ec2 command
@@ -50,9 +51,9 @@ var (
 	// iam command
 	iamCmd          = app.Command("iam", "Check IAM Policies.").Alias("i")
 	mfaCmd          = iamCmd.Command("mfa", "Check IAM MFA Policies").Alias("m")
-	mfaMaxDaysFlag  = mfaCmd.Flag("mfa-max-days", "Max no. of days users are allowed to go without enabling MFA.").Int()
+	mfaMaxDaysFlag  = mfaCmd.Flag("mfa-max-days", "Max no. of days users are allowed without MFA.").Int()
 	userCmd         = iamCmd.Command("user", "Check IAM User Policies").Alias("u")
-	userMaxDaysFlag = userCmd.Flag("user-max-days", "Max no. of days users are allowed to go without logging in.").Int()
+	userMaxDaysFlag = userCmd.Flag("user-max-days", "Max no. of days users are inactive.").Int()
 
 	// s3 command
 	s3Cmd = app.Command("s3", "Check S3 Policies.")
@@ -82,7 +83,9 @@ func main() {
 			var msg string
 			for _, e := range instances.Group {
 				if len(e.Instances) > 0 {
-					msg = fmt.Sprintf("[%s] [%s] %d Instances:\n", account.Name, e.Region, len(e.Instances))
+					msg = fmt.Sprintf("[%s] [%s] %d Instances:\n", account.Name,
+						e.Region,
+						len(e.Instances))
 					for _, i := range e.Instances {
 						if i.PublicIpAddress != nil {
 							msg += fmt.Sprintf("[%s] [%s] Instance [%s] has Public IP [%s]\n",
@@ -127,7 +130,9 @@ func main() {
 	case mfaCmd.FullCommand():
 		for _, account := range accounts {
 			violations := mfa.List(account).CheckPolicy(mfaMaxDays())
-			msg := fmt.Sprintf("[%s] %d Disabled MFAs:\n", violations.Account.Name, len(violations.Users))
+			msg := fmt.Sprintf("[%s] %d Disabled MFAs:\n",
+				violations.Account.Name,
+				len(violations.Users))
 			for _, v := range violations.Users {
 				y, m, d := v.CreateDate.Date()
 				msg += fmt.Sprintf("[%s] %s (%s)\n",
@@ -161,7 +166,9 @@ func main() {
 	case s3Cmd.FullCommand():
 		for _, account := range accounts {
 			violations := s3.List(account).CheckPolicy()
-			msg := fmt.Sprintf("[%s] %d Public Buckets:\n", violations.Account.Name, len(violations.Buckets))
+			msg := fmt.Sprintf("[%s] %d Public Buckets:\n",
+				violations.Account.Name,
+				len(violations.Buckets))
 			for _, b := range violations.Buckets {
 				msg += fmt.Sprintf("[%s] %s\n", violations.Account.Name, b)
 			}
@@ -186,7 +193,12 @@ func getAccounts() []oaws.Account {
 	for accountName, creds := range accountsMap {
 		accessKey := creds.(map[string]interface{})["aws_access_key_id"].(string)
 		secretKey := creds.(map[string]interface{})["aws_secret_access_key"].(string)
-		accounts = append(accounts, oaws.Account{Name: accountName, AccessKey: accessKey, SecretKey: secretKey, Token: ""})
+		accounts = append(accounts,
+			oaws.Account{
+				Name:      accountName,
+				AccessKey: accessKey,
+				SecretKey: secretKey,
+				Token:     ""})
 	}
 	return accounts
 }
@@ -206,7 +218,9 @@ func getRegions() []string {
 func report(data string) {
 	api := slack.New(viper.GetString("reporters.slack.token"))
 	slackChannel := viper.GetString("reporters.slack.channel")
-	respChannel, respTimestamp, err := api.PostMessage(slackChannel, data, slack.PostMessageParameters{})
+	respChannel, respTimestamp, err := api.PostMessage(slackChannel,
+		data,
+		slack.PostMessageParameters{})
 	if err != nil {
 		fmt.Printf("could not post slack message: %+v\n", err)
 	}
