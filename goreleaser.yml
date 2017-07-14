@@ -1,0 +1,21 @@
+release:
+  github:
+    owner: go-orthrus
+    name: orthrus
+
+build:
+  goos:
+  - linux
+  - darwin
+  - windows
+  goarch:
+  - amd64
+  main: cmd/orthrus/main.go
+  binary: orthrus
+
+archive:
+  format: zip
+  files:
+  - LICENSE*
+  - README*
+  - CHANGELOG*
