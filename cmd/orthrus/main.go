@@ -111,7 +111,10 @@ func main() {
 						gs.Region,
 						len(gs.SecGrps))
 					for _, sg := range gs.SecGrps {
-						msg += fmt.Sprintf("[%s] [%s] Permissions: %+v\n", *sg.GroupId, *sg.GroupName, sg.IpPermissions)
+						msg += fmt.Sprintf("[%s] [%s] Permissions: %+v\n",
+							*sg.GroupId,
+							*sg.GroupName,
+							sg.IpPermissions)
 					}
 				}
 			}
