@@ -10,11 +10,11 @@ This project is still unstable and, thus, **not** production-ready. Breaking cha
 
 ## Features
 
-- [x] Check for public EC2 instances in all regions.
-- [x] Check for lax Security Group policies (e.g. inbound 0.0.0.0/0) in all regions.
+- [x] Check public EC2 instances in all regions.
+- [x] Check Security Group policies (e.g. inbound 0.0.0.0/0) in all regions.
 - [x] Check User MFAs.
-- [x] Check User activity (via last login date)
-- [x] Check for public S3 buckets.
+- [x] Check User last login date.
+- [x] Check public S3 buckets.
 
 ## Install
 
