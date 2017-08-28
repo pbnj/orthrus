@@ -17,4 +17,4 @@ orthrus.toml
 orthrus.yml
 demo
 dist/
-.vagrant
+vendor/
