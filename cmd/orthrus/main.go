@@ -62,10 +62,10 @@ var (
 func init() {
 	homeDir, err := homedir.Dir()
 	if err != nil {
-		viper.AddConfigPath("$HOME/.config/orthrus")
+		viper.AddConfigPath("$HOME/.orthrus")
 	}
+	viper.AddConfigPath(filepath.Join(homeDir, ".orthrus"))
 	viper.SetConfigName("orthrus")
-	viper.AddConfigPath(filepath.Join(homeDir, ".config", "orthrus"))
 	if err := viper.ReadInConfig(); err != nil {
 		logrus.Errorf("could not load configuration file: %v", err)
 	}
