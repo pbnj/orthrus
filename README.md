@@ -10,11 +10,12 @@ This project is still unstable and, thus, **not** production-ready. Breaking cha
 
 ## Features
 
-- [x] Check public EC2 instances in all regions.
-- [x] Check Security Group policies (e.g. inbound 0.0.0.0/0) in all regions.
-- [x] Check User MFAs.
-- [x] Check User last login date.
-- [x] Check public S3 buckets.
+- [x] Check EC2 configurations
+    - [x] Check EC2 instances with public IPs in all regions.
+    - [x] Check Security Group policies (e.g. inbound 0.0.0.0/0) in all regions.
+- [x] Check IAM configurations (e.g. disabled MFAs, inactive users).
+- [x] Check S3 configurations (e.g. public buckets).
+- [ ] Check RDS configurations
 
 ## Install
 
@@ -74,9 +75,7 @@ Commands:
 
 ## TODO
 
-- [ ] Refactor into micro-services
 - [ ] Dockerize
-- [ ] Add more features
 - [ ] Add tests
 
 ## License
