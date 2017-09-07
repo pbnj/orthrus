@@ -21,12 +21,12 @@ This project is still unstable and, thus, **not** production-ready. Breaking cha
 
 - API
   ```sh
-  go get github.com/go-orthrus/orthrus
+  go get github.com/petermbenjamin/orthrus
   ```
 
 - CLI
   ```sh
-  go get github.com/go-orthrus/orthrus/cmd/orthrus
+  go get github.com/petermbenjamin/orthrus/cmd/orthrus
   ```
 
 ## Usage

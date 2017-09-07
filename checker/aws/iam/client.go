@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/iam"
-	oaws "github.com/go-orthrus/orthrus/checker/aws"
+	oaws "github.com/petermbenjamin/orthrus/checker/aws"
 )
 
 // Client instantiates and returns an IAM client

@@ -3,9 +3,8 @@ package instances
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	oaws "github.com/go-orthrus/orthrus/checker/aws"
-
-	oec2 "github.com/go-orthrus/orthrus/checker/aws/ec2"
+	oaws "github.com/petermbenjamin/orthrus/checker/aws"
+	oec2 "github.com/petermbenjamin/orthrus/checker/aws/ec2"
 )
 
 // IV represents instances per account that are violating policies.

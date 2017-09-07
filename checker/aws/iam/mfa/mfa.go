@@ -6,9 +6,9 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/service/iam"
-	oaws "github.com/go-orthrus/orthrus/checker/aws"
-	oiam "github.com/go-orthrus/orthrus/checker/aws/iam"
-	"github.com/go-orthrus/orthrus/checker/aws/iam/users"
+	oaws "github.com/petermbenjamin/orthrus/checker/aws"
+	oiam "github.com/petermbenjamin/orthrus/checker/aws/iam"
+	"github.com/petermbenjamin/orthrus/checker/aws/iam/users"
 )
 
 // MV holds a slice of virtual mfa devices per account.

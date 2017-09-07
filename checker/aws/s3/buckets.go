@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	oaws "github.com/go-orthrus/orthrus/checker/aws"
+	oaws "github.com/petermbenjamin/orthrus/checker/aws"
 )
 
 type policy struct {
