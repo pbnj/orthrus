@@ -26,10 +26,11 @@ func List(account oaws.Account, regions []string) *SG {
 	c := make(chan *Group)
 	defer close(c)
 
-	for _, region := range regions {
+	for ridx, region := range regions {
+		logrus.Debugf("[%d] Querying Security Groups in Region [%s]", ridx, region)
 		sg := &Group{Region: region}
 
-		go func(region string) {
+		go func(account oaws.Account, region string) {
 			descSecGrps, err := oec2.ClientWithRegion(account, region).DescribeSecurityGroups(&ec2.DescribeSecurityGroupsInput{})
 			if err != nil {
 				c <- sg
@@ -38,11 +39,11 @@ func List(account oaws.Account, regions []string) *SG {
 				sg.SecGrps = append(sg.SecGrps, *g)
 			}
 			c <- sg
-		}(region)
+		}(account, region)
 	}
 
-	for idx := range regions {
-		logrus.Debugln(idx)
+	for ridx, r := range regions {
+		logrus.Debugf("[%d] Retrieving data from Region [%s]", ridx, r)
 		select {
 		case sg := <-c:
 			sgs.GroupSets = append(sgs.GroupSets, *sg)

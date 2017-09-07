@@ -8,7 +8,6 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	homedir "github.com/mitchellh/go-homedir"
-	"github.com/nlopes/slack"
 	oaws "github.com/petermbenjamin/orthrus/checker/aws"
 	"github.com/petermbenjamin/orthrus/checker/aws/ec2/instances"
 	"github.com/petermbenjamin/orthrus/checker/aws/ec2/sg"
@@ -41,7 +40,6 @@ var (
 			logrus.SetLevel(logrus.DebugLevel)
 			return nil
 		}).Bool()
-	reportFlag = app.Flag("report", "Report violations").Bool()
 
 	// ec2 command
 	ec2Cmd = app.Command("ec2", "Check EC2 Policies.").Alias("e")
@@ -60,6 +58,8 @@ var (
 )
 
 func init() {
+	logrus.SetOutput(os.Stdout)
+
 	homeDir, err := homedir.Dir()
 	if err != nil {
 		viper.AddConfigPath("$HOME/.orthrus")
@@ -67,7 +67,7 @@ func init() {
 	viper.AddConfigPath(filepath.Join(homeDir, ".orthrus"))
 	viper.SetConfigName("orthrus")
 	if err := viper.ReadInConfig(); err != nil {
-		logrus.Errorf("could not load configuration file: %v", err)
+		logrus.WithField("file", "main.go").Errorf("could not load configuration file: %v", err)
 	}
 
 	accounts = getAccounts()
@@ -80,25 +80,23 @@ func main() {
 	case iCmd.FullCommand():
 		for _, account := range accounts {
 			instances := instances.List(account, regions).CheckPolicy()
-			var msg string
 			for _, e := range instances.Group {
 				if len(e.Instances) > 0 {
-					msg = fmt.Sprintf("[%s] [%s] %d Instances:\n", account.Name,
-						e.Region,
-						len(e.Instances))
 					for _, i := range e.Instances {
 						if i.PublicIpAddress != nil {
-							msg += fmt.Sprintf("[%s] [%s] Instance [%s] has Public IP [%s]\n",
-								account.Name,
-								e.Region,
-								*i.InstanceId,
-								*i.PublicIpAddress)
+
+							logrus.WithFields(logrus.Fields{
+								"AccountName":   account.Name,
+								"AccountNumber": account.Number,
+								"Region":        e.Region,
+								"Instance-ID":   *i.InstanceId,
+								"Instance-IP":   *i.PublicIpAddress,
+								// TODO: Compare Instance SGs with Security Group policies to only report public instances with permissive SG rules
+								// "Instance-SG":   i.SecurityGroups,
+							}).Warnln("Public Instance IP")
+
 						}
 					}
-					fmt.Println(msg)
-				}
-				if *reportFlag {
-					report(msg)
 				}
 			}
 		}
@@ -106,76 +104,69 @@ func main() {
 	case sgCmd.FullCommand():
 		for _, account := range accounts {
 			secGrps := sg.List(account, regions).CheckPolicy()
-			var msg string
 			for _, gs := range secGrps.GroupSets {
 				if len(gs.SecGrps) > 0 {
-					msg += fmt.Sprintf("[%s] [%s] %d Security Groups:\n",
-						secGrps.Account.Name,
-						gs.Region,
-						len(gs.SecGrps))
 					for _, sg := range gs.SecGrps {
-						msg += fmt.Sprintf("[%s] [%s] Permissions: %+v\n",
-							*sg.GroupId,
-							*sg.GroupName,
-							sg.IpPermissions)
+
+						logrus.WithFields(logrus.Fields{
+							"AccountName":   secGrps.Account.Name,
+							"AccountNumber": secGrps.Account.Number,
+							"Region":        gs.Region,
+							"SG-ID":         *sg.GroupId,
+							"SG-Name":       *sg.GroupName,
+							"SG-IPs":        sg.IpPermissions,
+						}).Warnln("Permissive Security Group")
+
 					}
 				}
 			}
-			if *reportFlag {
-				report(msg)
-			}
-			fmt.Println(msg)
+
 		}
 
 	case mfaCmd.FullCommand():
 		for _, account := range accounts {
 			violations := mfa.List(account).CheckPolicy(mfaMaxDays())
-			msg := fmt.Sprintf("[%s] %d Disabled MFAs:\n",
-				violations.Account.Name,
-				len(violations.Users))
 			for _, v := range violations.Users {
 				y, m, d := v.CreateDate.Date()
-				msg += fmt.Sprintf("[%s] %s (%s)\n",
-					violations.Account.Name,
-					*v.UserName,
-					fmt.Sprintf("%d-%d-%d", y, time.Month(m), d))
+
+				logrus.WithFields(logrus.Fields{
+					"AccountName":   violations.Account.Name,
+					"AccountNumber": violations.Account.Number,
+					"UserName":      *v.UserName,
+					"CreateDate":    fmt.Sprintf("%d-%d-%d", y, time.Month(m), d),
+				}).Warnln("Disabled MFA")
+
 			}
-			if *reportFlag {
-				report(msg)
-			}
-			fmt.Println(msg)
 		}
 
 	case userCmd.FullCommand():
 		for _, account := range accounts {
 			violations := users.List(account).CheckPolicy(userMaxDays())
-			var msg string
 			for _, uv := range violations.Users {
 				y, m, d := uv.PasswordLastUsed.Date()
-				msg += fmt.Sprintf("[%s] %s (%s)\n",
-					violations.Account.Name,
-					*uv.UserName,
-					fmt.Sprintf("%d-%d-%d", y, time.Month(m), d))
+
+				logrus.WithFields(logrus.Fields{
+					"AccountName":   violations.Account.Name,
+					"AccountNumber": violations.Account.Number,
+					"UserName":      *uv.UserName,
+					"LogonDate":     fmt.Sprintf("%d-%d-%d", y, time.Month(m), d),
+				}).Warnln("Inactive User")
+
 			}
-			if *reportFlag {
-				report(msg)
-			}
-			fmt.Println(msg)
 		}
 
 	case s3Cmd.FullCommand():
 		for _, account := range accounts {
 			violations := s3.List(account).CheckPolicy()
-			msg := fmt.Sprintf("[%s] %d Public Buckets:\n",
-				violations.Account.Name,
-				len(violations.Buckets))
 			for _, b := range violations.Buckets {
-				msg += fmt.Sprintf("[%s] %s\n", violations.Account.Name, b)
+
+				logrus.WithFields(logrus.Fields{
+					"AccountName":   violations.Account.Name,
+					"AccountNumber": violations.Account.Number,
+					"BucketName":    b,
+				}).Warnln("Public S3 Bucket")
+
 			}
-			if *reportFlag {
-				report(msg)
-			}
-			fmt.Println(msg)
 		}
 	}
 
@@ -183,19 +174,21 @@ func main() {
 
 func checkErr(err error) {
 	if err != nil {
-		fmt.Printf("%+v\n", err)
+		logrus.WithField("file", "main.go").Errorf("error: %+v\n", err)
 	}
 }
 
 func getAccounts() []oaws.Account {
 	var accounts []oaws.Account
 	accountsMap := viper.GetStringMap("aws.accounts")
-	for accountName, creds := range accountsMap {
-		accessKey := creds.(map[string]interface{})["aws_access_key_id"].(string)
-		secretKey := creds.(map[string]interface{})["aws_secret_access_key"].(string)
+	for accountName, info := range accountsMap {
+		accessKey := info.(map[string]interface{})["aws_access_key_id"].(string)
+		secretKey := info.(map[string]interface{})["aws_secret_access_key"].(string)
+		accountNumber := info.(map[string]interface{})["number"].(string)
 		accounts = append(accounts,
 			oaws.Account{
 				Name:      accountName,
+				Number:    accountNumber,
 				AccessKey: accessKey,
 				SecretKey: secretKey,
 				Token:     ""})
@@ -215,14 +208,14 @@ func getRegions() []string {
 	return viper.GetStringSlice("aws.regions")
 }
 
-func report(data string) {
-	api := slack.New(viper.GetString("reporters.slack.token"))
-	slackChannel := viper.GetString("reporters.slack.channel")
-	respChannel, respTimestamp, err := api.PostMessage(slackChannel,
-		data,
-		slack.PostMessageParameters{})
-	if err != nil {
-		fmt.Printf("could not post slack message: %+v\n", err)
-	}
-	logrus.Debugf("channel response: %+v (%+v)", respChannel, respTimestamp)
-}
+// func report(data string) {
+// 	api := slack.New(viper.GetString("reporters.slack.token"))
+// 	slackChannel := viper.GetString("reporters.slack.channel")
+// 	respChannel, respTimestamp, err := api.PostMessage(slackChannel,
+// 		data,
+// 		slack.PostMessageParameters{})
+// 	if err != nil {
+// 		fmt.Printf("could not post slack message: %+v\n", err)
+// 	}
+// 	logrus.Debugf("channel response: %+v (%+v)", respChannel, respTimestamp)
+// }
