@@ -18,3 +18,4 @@ orthrus.yml
 demo
 dist/
 vendor/
+vendor.orig/
