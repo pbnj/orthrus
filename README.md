@@ -75,8 +75,10 @@ Commands:
 
 ## TODO
 
-- [ ] Dockerize
+- [ ] Use Cobra CLI library instead of kingpin
 - [ ] Add tests
+- [x] Dockerize
+- [x] Improve logging
 
 ## License
 
