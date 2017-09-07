@@ -26,12 +26,6 @@
   version = "v1.10.8"
 
 [[projects]]
-  name = "github.com/fatih/color"
-  packages = ["."]
-  revision = "570b54cabe6b8eb0bc2dfce68d964677d63b5260"
-  version = "v1.5.0"
-
-[[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   revision = "629574ca2a5df945712d3079857300b5e4da0236"
@@ -62,18 +56,6 @@
   version = "v1.7.2"
 
 [[projects]]
-  name = "github.com/mattn/go-colorable"
-  packages = ["."]
-  revision = "941b50ebc6efddf4c41c8e4537a5f68a4e686b24"
-  version = "v0.0.8"
-
-[[projects]]
-  name = "github.com/mattn/go-isatty"
-  packages = ["."]
-  revision = "fc9e8d8ef48496124e79ae0df75490096eccf6fe"
-  version = "v0.0.2"
-
-[[projects]]
   branch = "master"
   name = "github.com/mitchellh/go-homedir"
   packages = ["."]
@@ -84,12 +66,6 @@
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   revision = "d0303fe809921458f417bcf828397a65db30a7e4"
-
-[[projects]]
-  name = "github.com/nlopes/slack"
-  packages = ["."]
-  revision = "c86337c0ef2486a15edd804355d9c73d2f2caed1"
-  version = "v0.1.0"
 
 [[projects]]
   name = "github.com/pelletier/go-buffruneio"
@@ -135,12 +111,6 @@
 
 [[projects]]
   branch = "master"
-  name = "golang.org/x/net"
-  packages = ["websocket"]
-  revision = "054b33e6527139ad5b1ec2f6232c3b175bd9a30c"
-
-[[projects]]
-  branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
   revision = "739734461d1c916b6c72a63d7efda2b27edb369f"
@@ -166,6 +136,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d9dd81a4d45f423ff3d2e30d3b7b4f141c0d3b31c00da7842bdd833e912d75d3"
+  inputs-digest = "35c4bf2eb90bdf1ceed6c13cd877bfb9210aa6ba6c71eec9d59cec8387833b1f"
   solver-name = "gps-cdcl"
   solver-version = 1
