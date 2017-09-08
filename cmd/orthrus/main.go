@@ -20,7 +20,7 @@ import (
 
 const (
 	// VERSION represents version of app
-	VERSION = "0.0.4"
+	VERSION = "0.1.0"
 )
 
 var (
