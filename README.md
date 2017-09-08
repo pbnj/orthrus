@@ -6,7 +6,8 @@
 
 ## DISCLAIMER
 
-This project is still unstable and, thus, **not** production-ready. Breaking changes may be introduced to the API or the CLI.
+This project is still unstable and, thus, **not** production-ready.
+Breaking changes may be introduced to the API or the CLI.
 
 ## Features
 
@@ -19,20 +20,23 @@ This project is still unstable and, thus, **not** production-ready. Breaking cha
 
 ## Install
 
+
 - API
-  ```sh
-  go get github.com/petermbenjamin/orthrus
-  ```
+    - Get [`dep`](https://github.com/golang/dep) if you don't have it yet: `go get -u github.com/golang/dep/cmd/dep`
+    ```sh
+    go get github.com/petermbenjamin/orthrus
+    cd $GOPATH/src/github.com/petermbenjamin/orthrus && dep ensure
+    ```
 
 - CLI
-  ```sh
-  go get github.com/petermbenjamin/orthrus/cmd/orthrus
-  ```
+    ```sh
+    go get github.com/petermbenjamin/orthrus/cmd/orthrus
+    ```
 
 - Via Docker
-  ```sh
-  docker run --rm -it -v "$HOME/.orthrus:/root/.orthrus" petermbenjamin/orthrus
-  ```
+    ```sh
+    docker run --rm -it -v "$HOME/.orthrus:/root/.orthrus" petermbenjamin/orthrus
+    ```
 
 ## Usage
 
