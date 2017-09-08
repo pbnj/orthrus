@@ -29,6 +29,11 @@ This project is still unstable and, thus, **not** production-ready. Breaking cha
   go get github.com/petermbenjamin/orthrus/cmd/orthrus
   ```
 
+- Via Docker
+  ```sh
+  docker run --rm -it -v "$HOME/.orthrus:/root/.orthrus" petermbenjamin/orthrus
+  ```
+
 ## Usage
 
 ```sh
