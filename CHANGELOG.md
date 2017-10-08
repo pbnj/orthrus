@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.1] - 2017-10-07
+
+### Changed
+
+- Fixed bug that caused orthrus to crash if data is being sent on a closed channel.
+- Logging improvements.
+
 ## [0.1.0] - 2017-09-07
 
 ### Added
@@ -12,30 +19,30 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- Improved logging
+- Improved logging.
 
 ## [0.0.4] - 2017-07-20
 
 ### Added
 
-- Check for public EC2 instances (public IPs)
-- Check for permissive security groups (e.g. allowing TCP/22 inbound from 0.0.0.0/0)
+- Check for public EC2 instances (public IPs).
+- Check for permissive security groups (e.g. allowing TCP/22 inbound from 0.0.0.0/0).
 
 ## [0.0.3] - 2017-06-22
 
 ### Added
 
-- Committed vendored dependencies
+- Committed vendored dependencies.
 
 ### Changed
 
-- Minor improvements
+- Minor improvements.
 
 ## [0.0.2] - 2017-06-21
 
 ### Added
 
-- Semantic versioning
+- Semantic versioning.
 
 ### Changed
 

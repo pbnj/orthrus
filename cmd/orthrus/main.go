@@ -20,7 +20,7 @@ import (
 
 const (
 	// VERSION represents version of app
-	VERSION = "0.1.0"
+	VERSION = "0.1.1"
 )
 
 var (
@@ -107,7 +107,6 @@ func main() {
 			for _, gs := range secGrps.GroupSets {
 				if len(gs.SecGrps) > 0 {
 					for _, sg := range gs.SecGrps {
-
 						logrus.WithFields(logrus.Fields{
 							"AccountName":   secGrps.Account.Name,
 							"AccountNumber": secGrps.Account.Number,
@@ -116,11 +115,9 @@ func main() {
 							"SG-Name":       *sg.GroupName,
 							"SG-IPs":        sg.IpPermissions,
 						}).Warnln("Permissive Security Group")
-
 					}
 				}
 			}
-
 		}
 
 	case mfaCmd.FullCommand():
