@@ -13,5 +13,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o orthrus cmd/orthr
 FROM alpine:latest
 LABEL maintainer "Peter Benjamin <petermbenjamin@gmail.com>"
 WORKDIR /root/
+RUN apk --no-cache add ca-certificates
 COPY --from=0 /go/src/github.com/petermbenjamin/orthrus/orthrus .
 ENTRYPOINT ["./orthrus"]
