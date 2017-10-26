@@ -1,8 +1,8 @@
+![orthrus](orthrus.png)
+
 # orthrus
 
 > Security framework and auditing tool for monitoring and analyzing security configurations across multiple environments
-
-![orthrus](orthrus.png)
 
 ## DISCLAIMER
 
