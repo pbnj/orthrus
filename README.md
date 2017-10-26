@@ -20,9 +20,9 @@ Breaking changes may be introduced to the API or the CLI.
 
 ## Install
 
+**Note:** You will need [`dep`](https://github.com/golang/dep) to install dependencies: `go get -u github.com/golang/dep/cmd/dep`
 
 - API
-    - Get [`dep`](https://github.com/golang/dep) if you don't have it yet: `go get -u github.com/golang/dep/cmd/dep`
     ```sh
     go get github.com/petermbenjamin/orthrus
     cd $GOPATH/src/github.com/petermbenjamin/orthrus && dep ensure
@@ -33,7 +33,7 @@ Breaking changes may be introduced to the API or the CLI.
     go get github.com/petermbenjamin/orthrus/cmd/orthrus
     ```
 
-- Via Docker
+- Docker
     ```sh
     docker run --rm -it -v "$HOME/.orthrus:/root/.orthrus" petermbenjamin/orthrus
     ```
